@@ -72,7 +72,7 @@ public class ITextUserAgent extends NaiveUserAgent {
                 InputStream is = resolveAndOpenStream(uriStr);
                 if (is != null) {
                     try {
-                        URI uri = new URI(uriStr);
+                        URI uri = new URL(uriStr).toURI();
                         if (uri.getPath() != null && uri.getPath().toLowerCase().endsWith(".pdf")) {
                             PdfReader reader = _outputDevice.getReader(uri);
                             PDFAsImage image = new PDFAsImage(uri);

@@ -17,8 +17,9 @@
  */
 
 
-import com.lowagie.text.DocumentException;
+import com.itextpdf.text.DocumentException;
 import com.lowagie.text.pdf.BaseFont;
+
 import org.w3c.dom.Document;
 import org.xhtmlrenderer.event.DefaultDocumentListener;
 import org.xhtmlrenderer.pdf.ITextFontResolver;
@@ -37,6 +38,7 @@ import org.xml.sax.ext.DefaultHandler2;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

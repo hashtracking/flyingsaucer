@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.xhtmlrenderer</groupId>
     <artifactId>flying-saucer-parent</artifactId>
-    <version>9.0.10-SNAPSHOT</version>
+    <version>9.0.10-Maypole-SNAPSHOT</version>
   </parent>
 
   <artifactId>flying-saucer-examples</artifactId>
@@ -36,7 +36,7 @@
     </dependency>
     <dependency>
       <groupId>org.xhtmlrenderer</groupId>
-      <artifactId>flying-saucer-pdf</artifactId>
+      <artifactId>flying-saucer-pdf-itext5</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>

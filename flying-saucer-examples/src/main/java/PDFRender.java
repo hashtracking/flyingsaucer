@@ -17,13 +17,14 @@
  */
 
 
-import com.lowagie.text.DocumentException;
 import org.xhtmlrenderer.pdf.ITextOutputDevice;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 import org.xhtmlrenderer.pdf.ITextUserAgent;
 import org.xhtmlrenderer.resource.XMLResource;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
+
+import com.itextpdf.text.DocumentException;
 
 import java.io.*;
 

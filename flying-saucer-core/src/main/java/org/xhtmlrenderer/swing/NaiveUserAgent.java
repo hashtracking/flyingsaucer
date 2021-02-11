@@ -283,36 +283,49 @@ public class NaiveUserAgent implements UserAgentCallback, DocumentListener {
      * @return A URI as String, resolved, or null if there was an exception (for example if the URI is malformed).
      */
     public String resolveURI(String uri) {
-        if (uri == null) return null;
-        String ret = null;
-        if (_baseURL == null) {//first try to set a base URL
-            try {
-                URI result = new URI(uri);
-                if (result.isAbsolute()) setBaseURL(result.toString());
+    	String resolvedURI = null;
+
+    	if(uri != null) {
+    		try {
+    			//...if it is a file, just use file: URL...
+    			File f = new File(uri).getAbsoluteFile();
+    			if(f.getParentFile().exists()) {
+    				resolvedURI = f.toURI().toString();
+    			}
+    			
+    			//...if not a file, see if it is an absolute URL...
+    			if(resolvedURI == null) {
+    				String uriTruncateQueryParams = (uri.indexOf('?') != -1 ? uri.substring(0, uri.indexOf('?')) : uri);
+    				URI unresolvedURI = new URI(uriTruncateQueryParams);
+    				//...if has a scheme, then ignore base URI we are currently using...
+    				if(unresolvedURI != null && unresolvedURI.isAbsolute()) {
+    	                resolvedURI = uri;
+    	            } else {
+    	                if (_baseURL == null) {//first try to set a base URL
+    	                	try {
+    	                        URL result = new URL(uri);
+    	                        setBaseURL(result.toExternalForm());
+    	                    } catch (MalformedURLException e) {
+    	                        try {
+    	                            setBaseURL(new File(".").toURI().toURL().toExternalForm());
+    	                        } catch (Exception e1) {
+    	                            XRLog.exception("The default NaiveUserAgent doesn't know how to resolve the base URL for " + uri);
+    	                        }
+    	                    }    	                }
+    	                URL result = new URL(new URL(_baseURL), uri);
+    	                resolvedURI = result.toString();
+    	            }
+    			}    			
+            } catch(IllegalArgumentException e) {
+                throw e;
+            } catch(MalformedURLException e) {
+                throw new IllegalArgumentException("The default NaiveUserAgent cannot resolve the URL " + uri + " with base URL " + _baseURL, e);
             } catch (URISyntaxException e) {
-                XRLog.exception("The default NaiveUserAgent could not use the URL as base url: " + uri, e);
+                throw new IllegalArgumentException("The default NaiveUserAgent cannot resolve the URL " + uri + " with base URL " + _baseURL, e);
             }
-            if (_baseURL == null) { // still not set -> fallback to current working directory
-                try {
-                    setBaseURL(new File(".").toURI().toURL().toExternalForm());
-                } catch (Exception e1) {
-                    XRLog.exception("The default NaiveUserAgent doesn't know how to resolve the base URL for " + uri);
-                    return null;
-                }
-            }
-        }
-        // test if the URI is valid; if not, try to assign the base url as its parent
-        try {
-            URI result = new URI(uri);
-            if (!result.isAbsolute()) {
-                XRLog.load(uri + " is not a URL; may be relative. Testing using parent URL " + _baseURL);
-                result=new URI(_baseURL).resolve(result);
-            }
-            ret = result.toString();
-        } catch (URISyntaxException e) {
-            XRLog.exception("The default NaiveUserAgent cannot resolve the URL " + uri + " with base URL " + _baseURL);
-        }
-        return ret;
+    	}
+    	
+    	return resolvedURI;
     }
 
     /**
